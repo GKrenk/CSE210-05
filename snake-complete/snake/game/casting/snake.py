@@ -38,7 +38,9 @@ class Snake(Actor):
     def grow_tail(self, number_of_segments):
         for i in range(number_of_segments):
             tail = self._segments[-1]
-            velocity = tail.get_velocity()
+            snake = self._segments[0]
+#            velocity = tail.get_velocity()
+            velocity = snake.get_velocity()
             offset = velocity.reverse()
             position = tail.get_position().add(offset)
             

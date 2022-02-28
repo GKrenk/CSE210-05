@@ -1,3 +1,6 @@
+from game.casting.actor import Actor                                    #George added this
+from game.shared.point import Point                                     #George added this
+
 class Director:
     """A person who directs the game. 
     
@@ -22,11 +25,13 @@ class Director:
             cast (Cast): The cast of actors.
             script (Script): The script of actions.
         """
+        snake = cast.get_first_actor("snakes")                          #George added this
         self._video_service.open_window()
         while self._video_service.is_window_open():
             self._execute_actions("input", cast, script)
             self._execute_actions("update", cast, script)
             self._execute_actions("output", cast, script)
+            snake.grow_tail(1)                                          #George added this
         self._video_service.close_window()
 
     def _execute_actions(self, group, cast, script):
