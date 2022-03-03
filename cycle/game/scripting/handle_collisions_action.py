@@ -38,6 +38,7 @@ class HandleCollisionsAction(Action):
 
         cycles = cast.get_actors("cycles")
         
+        #check if player 1 head runs into player 2 trail
         cycle1_head = cycles[0].get_segments()[0]
         cycle2_trail = cycles[1].get_segments()[1:]
 
@@ -45,13 +46,14 @@ class HandleCollisionsAction(Action):
             if cycle1_head.get_position().equals(segment.get_position()):
                 self._is_game_over = True
 
+        #check if player 2 head runs into player 1 trail
         cycle2_head = cycles[1].get_segments()[0]
         cycle1_trail = cycles[0].get_segments()[1:]
 
         for segment in cycle1_trail:
             if cycle2_head.get_position().equals(segment.get_position()):
                 self._is_game_over = True
-        
+
         
     def _handle_game_over(self, cast):
         """Shows the 'game over' message and turns the snake and food white if the game is over.
@@ -61,8 +63,6 @@ class HandleCollisionsAction(Action):
         """
         if self._is_game_over:
             cycles = cast.get_actors("cycles")
-            segments1 = cycles[0].get_segments()
-            segments2 = cycles[1].get_segments()
 
             x = int(constants.MAX_X / 2)
             y = int(constants.MAX_Y / 2)
@@ -73,11 +73,8 @@ class HandleCollisionsAction(Action):
             message.set_position(position)
             cast.add_actor("messages", message)
 
-            for segment in segments1:
-                segment.set_color(constants.WHITE)
-
-            for segment in segments2:
-                segment.set_color(constants.WHITE)
-                
-            cycles[0].set_color(constants.WHITE)
-            cycles[1].set_color(constants.WHITE)
+            for cycle in cycles:
+                segments = cycle.get_segments()
+                for segment in segments:
+                    segment.set_color(constants.WHITE)
+                cycle.set_color(constants.WHITE)
