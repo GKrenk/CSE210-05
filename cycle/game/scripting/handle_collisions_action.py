@@ -71,6 +71,8 @@ class HandleCollisionsAction(Action):
             message = Actor()
             message.set_text("Game Over!")
             message.set_position(position)
+            message.set_color(constants.RED)
+            message.set_font_size(30)
             cast.add_actor("messages", message)
 
             for cycle in cycles:
