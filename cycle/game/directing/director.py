@@ -1,4 +1,6 @@
-from game.casting.actor import Actor                                    #George added this
+from game.casting.actor import Actor
+from game.scripting.control_actors_action import ControlActorsAction
+from game.scripting.handle_collisions_action import HandleCollisionsAction                                    #George added this
 from game.shared.point import Point                                     #George added this
 
 class Director:
@@ -17,6 +19,7 @@ class Director:
             video_service (VideoService): An instance of VideoService.
         """
         self._video_service = video_service
+        self._is_game_over = False
         
     def start_game(self, cast, script):
         """Starts the game using the given cast and script. Runs the main game loop.
@@ -42,4 +45,10 @@ class Director:
         """
         actions = script.get_actions(group)    
         for action in actions:
-            action.execute(cast, script)          
+            action.execute(cast, script)
+
+            if isinstance(action, HandleCollisionsAction) == True:
+                self._is_game_over = action.get_is_game_over()
+
+            if isinstance(action, ControlActorsAction):
+                action.set_is_game_over(self._is_game_over)

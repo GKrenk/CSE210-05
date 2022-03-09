@@ -1,4 +1,5 @@
 import constants
+import random
 from game.scripting.action import Action
 from game.shared.point import Point
 
@@ -22,6 +23,8 @@ class ControlActorsAction(Action):
         self._keyboard_service = keyboard_service
         self._direction1 = Point(constants.CELL_SIZE, 0)
         self._direction2 = Point(constants.CELL_SIZE, 0)
+        self._is_game_over = False
+        self._restart_game = Action
 
     def execute(self, cast, script):
         """Executes the control actors action.
@@ -32,46 +35,65 @@ class ControlActorsAction(Action):
         """
 
         cycles = cast.get_actors("cycles")
+        is_game_over = self._is_game_over
 
-        #Player 1
+        if is_game_over == False:
+            #Player 1
 
-        # left
-        if self._keyboard_service.is_key_down('a'):
-            self._direction1 = Point(-constants.CELL_SIZE, 0)
-        
-        # right
-        if self._keyboard_service.is_key_down('d'):
-            self._direction1 = Point(constants.CELL_SIZE, 0)
-        
-        # up
-        if self._keyboard_service.is_key_down('w'):
-            self._direction1 = Point(0, -constants.CELL_SIZE)
-        
-        # down
-        if self._keyboard_service.is_key_down('s'):
-            self._direction1 = Point(0, constants.CELL_SIZE)
-        
-        cycle1 = cycles[0]
-        cycle1.turn_head(self._direction1)
+            # left
+            if self._keyboard_service.is_key_down('a'):
+                self._direction1 = Point(-constants.CELL_SIZE, 0)
+            
+            # right
+            if self._keyboard_service.is_key_down('d'):
+                self._direction1 = Point(constants.CELL_SIZE, 0)
+            
+            # up
+            if self._keyboard_service.is_key_down('w'):
+                self._direction1 = Point(0, -constants.CELL_SIZE)
+            
+            # down
+            if self._keyboard_service.is_key_down('s'):
+                self._direction1 = Point(0, constants.CELL_SIZE)
+            
+            cycle1 = cycles[0]
+            cycle1.turn_head(self._direction1)
 
-        ################################################################
-        #Player 2
+            ################################################################
+            #Player 2
 
-        # left
-        if self._keyboard_service.is_key_down('j'):
-            self._direction2 = Point(-constants.CELL_SIZE, 0)
+            # left
+            if self._keyboard_service.is_key_down('j'):
+                self._direction2 = Point(-constants.CELL_SIZE, 0)
+            
+            # right
+            if self._keyboard_service.is_key_down('l'):
+                self._direction2 = Point(constants.CELL_SIZE, 0)
+            
+            # up
+            if self._keyboard_service.is_key_down('i'):
+                self._direction2 = Point(0, -constants.CELL_SIZE)
+            
+            # down
+            if self._keyboard_service.is_key_down('k'):
+                self._direction2 = Point(0, constants.CELL_SIZE)
+            
+            cycle2 = cycles[1]
+            cycle2.turn_head(self._direction2)
         
-        # right
-        if self._keyboard_service.is_key_down('l'):
-            self._direction2 = Point(constants.CELL_SIZE, 0)
-        
-        # up
-        if self._keyboard_service.is_key_down('i'):
-            self._direction2 = Point(0, -constants.CELL_SIZE)
-        
-        # down
-        if self._keyboard_service.is_key_down('k'):
-            self._direction2 = Point(0, constants.CELL_SIZE)
-        
-        cycle2 = cycles[1]
-        cycle2.turn_head(self._direction2)
+        elif is_game_over == True:
+            cycle1 = cycles[0]
+            cycle2 = cycles[1]
+            left = Point(-constants.CELL_SIZE, 0)
+            right = Point(constants.CELL_SIZE, 0)
+            up = Point(0, -constants.CELL_SIZE)
+            down = up = Point(0, constants.CELL_SIZE)
+            directions = [left, right, up, down]
+
+            cycle1.turn_head(random.choice(directions))
+            cycle2.turn_head(random.choice(directions))
+
+
+
+    def set_is_game_over(self, _is_game_over):
+        self._is_game_over = _is_game_over
